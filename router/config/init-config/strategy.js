@@ -1,0 +1,9 @@
+{"publish":{"useVote":2,"useReplyView":3,"usePay":4},"img":{"head":200000,"plate":500000,"cover":200000},
+	"ep":{
+		"epArr":[200,600,1200,2000,3000,4200,5600,7200,9000],
+		"maxLevel":9,
+		"publish":{"ep":10,"g":5},
+		"reply1":{"ep":2,"g":2},
+		"reply2":{"ep":1,"g":1}
+	}
+}
