@@ -60,6 +60,6 @@ myMongo.main.initMain().then(mainObj=>{
 	app.use(async(ctx,next)=>{
 		ctx.body='error';
 	});
-	app.listen(!PROD_ENV?3000:80);	
+	app.listen(!PROD_ENV?3001:80);	
 	
 })
