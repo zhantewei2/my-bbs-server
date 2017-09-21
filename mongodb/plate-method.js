@@ -252,7 +252,7 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 			{$inc:{'rCache.cs':1}},
 			{select:{_id:1,'rCache.cs':1}},
 			(err,result)=>{
-			if(!result)return cb(err,null);	
+			if(err||!result)return cb(err,null);	
 			if(result.rCache.cs<cacheCount){
 				replyModel.update(
 					{_id:result._id},
@@ -326,34 +326,33 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 	};
 	let getUserMsn=(id)=>{
 		let pj={_id:1,'info.nickN':1,level:1,ep:1,'head.name':1};
-		return new Promise(resolve=>{
+		return new Promise((resolve,reject)=>{
 			userColle.collection.findOne({_id:id},pj,(err,data)=>{
+				if(err)reject(err);
 				resolve(data);
 			});
 		})
 	}
 	let addonUser=(replys)=>{
 		return new Promise((resolve,reject)=>{
-			try{
 			replys.asyncForEach(
 				(reply,next)=>{
 					getUserMsn(reply.auId).then(v=>{
 						//addition  user to reply Obj;
 						reply.user=v;
 						next();
-					})
+					}).catch(e=>reject(e))
 				},
 				()=>{resolve()}
-			)}catch(e){reject(e)}
+			)
 		})
 	}
 	const readPlate=(rgId,id,pj,cb)=>{
-		try{
 			models[rgId].collection.findOneAndUpdate(
 				{_id:mongoose.Types.ObjectId(id)},
 				{$inc:{rds:1}},
 				{ projection:pj},cb
-			)}catch(e){cb(true,null)}
+			)
 		};
 	const dealContent2=(obj,doc,cb)=>{
 		try{
@@ -426,14 +425,14 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 			 if(__v==-1){
 			 	//justy return replys and sup op;version had be compared by angular;
 			 	readPlate(rgId,aId,vpCleanPj,(err,data)=>{
-			 		if(err||!data.value)return cb(err,null);
+			 		if(err||!data.value)return cb(true);
 			 		const doc=data.value;
 			 		if(doc.stg&&doc.stg.rv)doc.stg=undefined;
 			 		next(doc,1);
 			 	})
 			 }else if(__v==-2){
 			 	readPlate(rgId,aId,{rps:1,_id:0,t:1,s:1,'au.id':1},(err,data)=>{
-			 		if(err||!data.value)return cb(err,null);
+			 		if(err||!data.value)return cb(true);
 			 		next(data.value,obj.s);
 				})
 
@@ -441,7 +440,7 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 			 	vpCleanPj.v2=1;
 			 	vpCleanPj.c2=1;
 			 	readPlate(rgId,aId,vpCleanPj,(err,data)=>{
-			 		if(err||!data.value)return cb(err,null);
+			 		if(err||!data.value)return cb(true);
 			 		dealContent2(obj,data.value,(doc)=>next(doc,1))
 			 	})
 			 }else{
@@ -461,7 +460,7 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 				 			}
 				 			next(doc,obj.s||1);
 				 		}) 				 		
-				 	}catch(e){cb(true,null)}	
+				 	}catch(e){cb(true)}	
 			 	})
 			 }
 			})((doc,start)=>{
@@ -474,12 +473,12 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 				readReply(rgId,aId,start).then(replys=>{
 					addonUser(replys).then(()=>{
 					 cb(null,{d:doc,r:replys});
-					}).catch(e=>{throw true})
+					}).catch(e=>cb(true))
 				})
 				}else{cb(null,{d:doc,r:[]})}
 				})	
 			 })
-		}catch(e){cb(false)}
+		}catch(e){cb(true)}
 	}
 	methods.viewReplys=(obj,cb)=>{
 		/*obj:{
@@ -523,13 +522,14 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 			reply2Colle.find(query,pj).sort({cd:-1}).limit(reply2Ps).exec(cb);//client reverse;
 		}else{
 			replys[obj.rgId].findOne({aId:obj.aId,rId:obj.rId},{_id:0,'rCache.cs':1},(err,data)=>{
+				if(err)return cb(true);
 				let totals=data.rCache.cs-cacheCount;
 				let limit=totals%reply2Ps,count=limit||reply2Ps;
 				reply2Colle.find(query,pj).sort({cd:-1}).limit(count).exec((err,data)=>{
 					cb(err,{data:data,colles:totals})
 				});
 			})
-		}}catch(e){cb(false)}
+		}}catch(e){cb(true)}
 	};
 	methods.removeReply2=(obj,cb)=>{
 		//the five lists in the first cannot be removed ;

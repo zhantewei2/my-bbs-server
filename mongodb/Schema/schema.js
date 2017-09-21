@@ -1,7 +1,7 @@
 module.exports=function(mongoose){
 	const Schema=mongoose.Schema;
 	let container={};
-	
+
 	//hasVote:
 
 	container.defaultSchema=require('./article-strategy-schema.js')(Schema);
@@ -15,7 +15,7 @@ module.exports=function(mongoose){
 		aId:Schema.Types.ObjectId, //ancestor id ; PlateId; 
 		pos:String, //reply Collection position rgId;removeRG need;
 		cd:{type:Date,default:new Date()}
-	});
+	},{autoIndex:!PROD_ENV});
 	//index:
 	container.reply2Schema.index({aId:1,rId:1,cd:1})
 
@@ -33,7 +33,7 @@ module.exports=function(mongoose){
 			cs:{type:Number,default:0},  //reply2 count
 			mbs:[] //reply2 members limit5.
 		}
-	})
+	},{autoIndex:!PROD_ENV})
 	//index:
 	container.reply2Schema.index({rId:1,aId:1})
 
@@ -81,7 +81,7 @@ module.exports=function(mongoose){
 				}
 			*/
 		}
-	});
+	},{autoIndex:!PROD_ENV});
 	//index:
 	container.plateSchema.index({lrd:1})
 	container.plateSchema.index({'au.id':1,cd:1})
@@ -116,7 +116,7 @@ module.exports=function(mongoose){
 		},	
 		
 		fb:{type:Boolean,default:false} //forbid;
-	})
+	},{autoIndex:!PROD_ENV})
 	//index:
 	container.mainSchema=new Schema({
 		//recombination collection:
@@ -145,7 +145,7 @@ module.exports=function(mongoose){
 		region:
 		{name:String,_id:Number,category:String}
 		*/
-	});
+	},{autoIndex:!PROD_ENV});
 	container.ntfSchema=new Schema({
 		//just return relative massage count;
 		tId:String,
@@ -168,6 +168,6 @@ module.exports=function(mongoose){
 		*/
 		sup:[],//Array<voteQuery>
 		op:[]//Array<voteQuery>
-	});
+	},{autoIndex:!PROD_ENV});
 	return container;
 }
