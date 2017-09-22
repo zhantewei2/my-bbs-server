@@ -14,7 +14,7 @@ module.exports=function(mongoose){
 		rId:Number,   //reply1 ID;
 		aId:Schema.Types.ObjectId, //ancestor id ; PlateId; 
 		pos:String, //reply Collection position rgId;removeRG need;
-		cd:{type:Date,default:new Date()}
+		cd:{type:Date}
 	},{autoIndex:!PROD_ENV});
 	//index:
 	container.reply2Schema.index({aId:1,rId:1,cd:1})
@@ -26,7 +26,7 @@ module.exports=function(mongoose){
 		c:String, //content
 		sup:{type:Number,default:0}, //support Number;
 		op:{type:Number,default:0}, //oppose Number;
-		cd:{type:Date,default:new Date().toJSON()}, //createDate;
+		cd:{type:String}, //createDate;
 		md:Date, //modifyDate;
 		aId:Schema.Types.ObjectId, //article id
 		rCache:{
@@ -35,7 +35,7 @@ module.exports=function(mongoose){
 		}
 	},{autoIndex:!PROD_ENV})
 	//index:
-	container.reply2Schema.index({rId:1,aId:1})
+	container.replySchema.index({rId:1,aId:1})
 
 	container.plateSchema=new Schema({
 		t:String, //title 

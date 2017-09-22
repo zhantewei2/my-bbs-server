@@ -70,7 +70,7 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 			rgId:
 		*/
 			let mfObj={},uq={__v:1};
-			mfObj['md']=new Date().toJSON();
+			mfObj['md']=new Date().toString();
 			if(obj.c)mfObj.c=obj.c;
 			if(obj.t)mfObj.t=obj.t;
 			if(obj.s)mfObj.s=obj.s;
@@ -181,6 +181,7 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 					aId:obj.aId,
 					rId:id,
 					c:obj.c,
+					cd:new Date().toString(),
 					auId:obj.uId
 				},(err,data)=>{
 					if(err)return cb(err,null);
