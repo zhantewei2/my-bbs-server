@@ -116,7 +116,7 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 				{$inc:{'stg.p.t':1}},
 				{select:{'au.id':1}},
 				(err,data)=>{
-					if(err)return cb(true,null);
+					if(err||!data)return cb(true,null);
 					aPay.create({aId:obj.aId,uId:obj.uId},()=>{
 						userColle.gold(data.au.id,obj.p,cb);
 					})
@@ -173,7 +173,7 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 				select:{rps:1,t:1,stg:1}
 			},
 			(err,aData)=>{
-				if(err)return cb(err,null);
+				if(err||!aData)return cb(err,null);
 				let id=aData.rps;
 				//save reply
 
@@ -558,7 +558,7 @@ module.exports=function(mainObj,models,replys,mainColle,userColle,reply2Colle,nt
 				{$inc:{'rCache.cs':-1},$pop:{'rCache.mbs':obj.In}},
 				{select:{'rCache.cs':1}},
 				(err,data)=>{
-					if(err)return cb(true,null);
+					if(err||!data)return cb(true,null);
 					if(data.rCache.cs>2){
 						reply2Colle.collection.findOneAndDelete(
 							{aId:mongoose.Types.ObjectId(obj.aId),rId:obj.rId},
