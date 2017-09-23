@@ -35,7 +35,7 @@ myMongo.main.initMain().then(mainObj=>{
 		app.use(async(ctx,next)=>{
 			//if(ctx.method=='OPTIONS')return ctx.status=202;
 
-			ctx.set('Access-Control-Allow-Origin','http://localhost:4200');
+			ctx.set('Access-Control-Allow-Origin','http://155.155.1.101:4200');
 			ctx.set('Access-Control-Allow-Method','POST,GET,PUT,DELETE');
 			ctx.set('Access-Control-Allow-Headers','Content-Type');
 			ctx.set('Access-COntrol-Allow-Credentials','true');

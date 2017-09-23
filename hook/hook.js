@@ -3,15 +3,14 @@ const {nextDayTime}=require('./tool.js');
 const {hookRestoreInterval} =require('../tool/common.js');
 
 module.exports=function(mainObj){
-	const now=new Date();
-	const perTime=1000*60*60*24;
-	const compareTime=1000*60*60*12;
-	const restoreCount=0;
-	const run=()=>{
+	const 
+	now=new Date(),
+	perTime=1000*60*60*24,
+	compareTime=1000*60*60*12,
+	run=()=>{
 		refreshArticleCount(mainObj);
 	};
-
-	let check,reCheck,interval,rTime;
+	let check,reCheck,interval,rTime,restoreCount=0;
 	check=(time)=>{
 		setTimeout(()=>{
 			run();
